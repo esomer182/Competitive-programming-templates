@@ -1,5 +1,5 @@
 struct segTree {
-    //Las m·s recientes son las que tienen el Ìndice m·s pequeÒo.
+    //Las m√°s recientes son las que tienen el √≠ndice m√°s peque√±o.
     int size;
     vector<pair<ll, ll>> sums;
     vector<pair<ll, ll>> upd;
