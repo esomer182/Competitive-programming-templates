@@ -1,3 +1,4 @@
+//Tested on: https://judge.yosupo.jp/submission/181932. I should try to make it faster.
 struct HLD{
     vector<bool> final, heavy;
     vector<pair<int, int>> paths;
