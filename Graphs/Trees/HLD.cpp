@@ -1,14 +1,17 @@
 struct HLD{
     vector<bool> final, heavy;
     vector<pair<int, int>> paths;
-    vector<int> id, parent, nodes, ind;
-
+    vector<int> id, parent, nodes, ind, depth;
+ 
+    segTree st;
+ 
     int DFS(int x, vector<vector<int>>& adj, int p){
         parent[x] = p;
         vector<pair<int, int>> v;
         int subtree = 1;
         for(int node : adj[x]){
             if(node == p) continue;
+            depth[node] = depth[x] + 1;
             v.push_back({node, DFS(node, adj, x)});
             subtree += v.back().second;
         }
@@ -23,10 +26,11 @@ struct HLD{
         final[x] = fin;
         return subtree;
     }
-
-    void build(vector<vector<int>>& adj){
+ 
+    void build(vector<vector<int>>& adj, vector<int>& v){
         int n = adj.size();
-        final.assign(n, 0); heavy.assign(n, 0); id.resize(n); parent.resize(n); nodes.resize(n); ind.resize(n);
+        final.assign(n, 0); heavy.assign(n, 0); id.resize(n); parent.resize(n); nodes.resize(n); ind.resize(n); depth.resize(n);
+        depth[0] = 0;
         DFS(0, adj, -1);
         int curr = 0;
         for(int i = 0; i < n; i++){
@@ -45,15 +49,19 @@ struct HLD{
                 paths.push_back({start, curr - 1});
             }
         }
+        st.init(n);
+        for(int i = 0; i < n; i++) st.set(i, v[nodes[i]]);
     }
-
+ 
     int query(int a, int b){
         int ans = 0;
-        while(a != b){
-            if(depth[a] < depth[b]) swap(a, b);
+        bool done = false;
+        while(!done){
+            if(depth[nodes[paths[id[a]].second]] < depth[nodes[paths[id[b]].second]]) swap(a, b);
             if(id[a] == id[b]){
-                ans = max(ans, st.calc(ind[a], ind[b] + 1));
+                ans = max(ans, st.calc(min(ind[a], ind[b]), max(ind[a], ind[b]) + 1));
                 a = b;
+                done = true;
             }else{
                 ans = max(ans, st.calc(ind[a], paths[id[a]].second + 1));
                 a = parent[nodes[paths[id[a]].second]];
