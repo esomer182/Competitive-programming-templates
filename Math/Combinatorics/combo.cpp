@@ -1,4 +1,4 @@
-vector<ll> fact;
+vector<ll> fact, invf;
 
 ll binpow(ll a, ll b, int mod = MOD){
     if(!b) return 1;
@@ -24,7 +24,7 @@ ll inv(ll x, ll mod = MOD){
 
 ll c(int n, int k){
     if(n < k) return 0;
-    return (fact[n] * inv(fact[k] * fact[n - k], MOD)) % MOD;
+    return (((fact[n] * invf[k]) % MOD) * invf[n - k]) % MOD;
 }
 
 ll c_without_mod(int n, int k){
@@ -38,10 +38,12 @@ ll c_without_mod(int n, int k){
 }
 
 void init_fac(int n){
-    fact.resize(n + 1);
+    fact.resize(n + 1); invf.resize(n+1);
     fact[0] = 1;
+    invf[0] = 1;
     for(int i = 1; i <= n; i++){
         fact[i] = fact[i - 1] * i;
         fact[i] %= MOD;
+        invf[i] = inv(fact[i]);
     }
 }
