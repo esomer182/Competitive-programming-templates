@@ -23,7 +23,9 @@ struct Hash{
 	int n;
 	vector<ll> pw1, pw2, inv1, inv2;
 	vector<pair<ll, ll>> hash, hashRev;
-	void hashString(string& s){
+	string s;
+	void hashString(string _s){
+		s = _s;
 		n = (int)s.size();
 		pw1.assign(n, 1); pw2.assign(n, 1);
 		inv1.assign(n, 1); inv2.assign(n, 1);
@@ -72,6 +74,11 @@ struct Hash{
 			hsh.first += hashRev[k-1].first; hsh.first %= MOD1;
 			hsh.second += hashRev[k-1].second; hsh.second %= MOD2;
 		}
+		return hsh;
+	}
+	pair<ll, ll> change(pair<ll, ll> hsh, int i, char c){
+		hsh.first = (hsh.first - (pw1[i] * s[i]) % MOD1 + (pw1[i] * c) % MOD1 + MOD1) % MOD1;
+		hsh.second = (hsh.second - (pw2[i] * s[i]) % MOD2 + (pw2[i] * c) % MOD2 + MOD2) % MOD2;
 		return hsh;
 	}
 };
